@@ -1,0 +1,2567 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nindujerla Nandu — AI/ML & Software Portfolio</title>
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&family=Caveat+Brush&family=Anton&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink-950: #3d0f23;
+      --pink-900: #4d142d;
+      --pink-800: #752247;
+      --pink-700: #99345f;
+      --pink-500: #e579a4;
+      --pink-300: #f6b8d0;
+      --pink-200: #ffd6e6;
+      --pink-100: #ffeaf2;
+      --hole: #eb93b5;
+      --ink: #240c17;
+      --n: min(100vw / 1440, 100vh / 900);
+      --mbs: 1;
+      --th: 150px;
+    }
+
+    @media (max-width: 820px) {
+      :root {
+        --n: calc(100vw / 430);
+      }
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #e889ad;
+      color: var(--pink-900);
+      font-family: 'Inter Tight', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .js .pre {
+      opacity: 0;
+    }
+
+    /* Light Pink Studio Stage */
+    .stage {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, #e788ac 0%, #f5bdd3 48%, #ffedf4 100%);
+    }
+
+    .stage::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 38%, rgba(255, 255, 255, .36) 0%, rgba(255, 255, 255, 0) 62%);
+      pointer-events: none;
+    }
+
+    @media (max-width: 820px) {
+      .stage {
+        background: linear-gradient(180deg, #e484a8 0%, #f4bad1 54%, #ffedf4 100%);
+      }
+      .stage::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, #ea8fb2 0%, #f5bdd3 58%, #ffeaf2 100%);
+        opacity: 0;
+        transition: opacity 1.4s cubic-bezier(.65, 0, .35, 1);
+        pointer-events: none;
+      }
+      .stage.m-case::before {
+        opacity: 1;
+      }
+    }
+
+    /* Scene frame: 1440x810 units */
+    .frame {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1440px;
+      height: 810px;
+      transform-origin: 0 0;
+      will-change: transform;
+      --glide: 0s;
+    }
+
+    .frame.glide {
+      transition: transform var(--glide) cubic-bezier(.65, 0, .35, 1);
+    }
+
+    /* Giant NANDU Wordmark */
+    .wm {
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 1440px;
+      height: 260px;
+      overflow: visible;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Nandu Circular Hero Portrait */
+    .hero-subject {
+      position: absolute;
+      left: 50%;
+      top: 132px;
+      width: 356px;
+      height: 356px;
+      transform: translateX(-50%);
+      z-index: 4;
+      pointer-events: auto;
+    }
+
+    .portrait-ring {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      padding: 10px;
+      box-sizing: border-box;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .95), rgba(255, 214, 230, .75));
+      box-shadow:
+        0 26px 64px rgba(117, 34, 71, .22),
+        0 6px 18px rgba(117, 34, 71, .12),
+        inset 0 0 0 1px rgba(255, 255, 255, .9);
+    }
+
+    .portrait-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      background: linear-gradient(180deg, #f8d4e2 0%, #f1b6cd 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .portrait-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: none;
+    }
+
+    .portrait-inner.has-img img {
+      display: block;
+    }
+
+    .portrait-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--pink-800);
+      text-align: center;
+    }
+
+    .portrait-inner.has-img .portrait-fallback {
+      display: none;
+    }
+
+    .portrait-fallback .mono {
+      font-family: 'Anton', sans-serif;
+      font-size: 108px;
+      line-height: 1;
+      color: rgba(117, 34, 71, .82);
+    }
+
+    .portrait-fallback .sub {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: .75;
+    }
+
+    .photo-btn {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, .94);
+      color: var(--pink-900);
+      border: 1px solid rgba(117, 34, 71, .18);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(77, 20, 45, .16);
+      transition: transform .2s ease, opacity .2s ease, background .2s ease;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .photo-btn:hover {
+      background: #fff;
+      transform: translateX(-50%) translateY(-1px);
+    }
+
+    .portrait-inner.has-img .photo-btn {
+      opacity: 0;
+    }
+
+    .hero-subject:hover .portrait-inner.has-img .photo-btn {
+      opacity: 1;
+    }
+
+    body.is-case .hero-subject {
+      pointer-events: none;
+    }
+
+    /* Lanyard Badge */
+    .badge {
+      position: absolute;
+      left: 986px;
+      top: -165px;
+      width: 582px;
+      height: 1030px;
+      transform-origin: 288px 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .badge > img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      filter: drop-shadow(0 18px 28px rgba(77, 20, 45, .14));
+    }
+
+    .badge .card {
+      position: absolute;
+      left: 172px;
+      top: 536px;
+      width: 238px;
+      height: 392px;
+      padding: 20px 16px 0 16px;
+      box-sizing: border-box;
+      color: var(--ink);
+      font-family: 'Inter Tight', sans-serif;
+    }
+
+    .badge .card h4 {
+      margin: 0;
+      font-size: 28px;
+      line-height: .95;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      color: var(--pink-900);
+    }
+
+    .badge .card .yr {
+      position: absolute;
+      right: 16px;
+      top: 60px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--pink-700);
+    }
+
+    .badge .card .role {
+      margin-top: 12px;
+      padding-top: 5px;
+      border-top: 1px solid rgba(77, 20, 45, .35);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    .badge .card .ph {
+      width: 92px;
+      height: 112px;
+      margin: 11px auto;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #fbe0ea 0%, #f4bed3 100%);
+      box-shadow: inset 0 0 0 1px rgba(77, 20, 45, .08);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .badge .card .ph img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: none;
+    }
+
+    .badge .card .ph.has-img img {
+      display: block;
+    }
+
+    .badge .card .ph .ph-mono {
+      font-family: 'Anton', sans-serif;
+      font-size: 40px;
+      color: var(--pink-800);
+    }
+
+    .badge .card .ph.has-img .ph-mono {
+      display: none;
+    }
+
+    .badge .card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 6px;
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 6px 0 3px;
+      border-bottom: 1.5px dotted rgba(77, 20, 45, .45);
+    }
+
+    .badge .card .row b {
+      font-size: 7.8px;
+      font-weight: 600;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .badge .hit {
+      position: absolute;
+      left: 160px;
+      top: 470px;
+      width: 262px;
+      height: 440px;
+      pointer-events: auto;
+      cursor: grab;
+    }
+
+    .script {
+      position: absolute;
+      top: 152px;
+      left: 0;
+      z-index: 6;
+      font-family: 'Caveat Brush', cursive;
+      font-size: 78px;
+      line-height: 1;
+      color: #fff;
+      letter-spacing: -.5px;
+      transform: rotate(-8deg);
+      transform-origin: 0 50%;
+      text-shadow: 0 3px 16px rgba(117, 34, 71, .28);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* 3D Silver Laptop Assembly */
+    .laptop-stage {
+      position: absolute;
+      inset: 0;
+      perspective: 1700px;
+      z-index: 7;
+      pointer-events: none;
+    }
+
+    .laptop {
+      position: absolute;
+      left: 252px;
+      top: 79px;
+      width: 936px;
+      height: 678px;
+      transform-style: preserve-3d;
+      transform-origin: 468px 339px;
+      transform: translate3d(0px, 212px, 0px) scale(0.42) rotateX(18deg) rotateY(-14deg) rotateZ(-4deg);
+      will-change: transform;
+    }
+
+    .laptop-lid {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 936px;
+      height: 648px;
+      border-radius: 24px 24px 10px 10px;
+      background: linear-gradient(145deg, #ffffff 0%, #e5e8ed 35%, #c5ccd4 100%);
+      padding: 2px;
+      box-sizing: border-box;
+      box-shadow:
+        0 38px 90px rgba(77, 20, 45, .28),
+        0 10px 26px rgba(77, 20, 45, .18),
+        inset 0 1px 0 rgba(255, 255, 255, .95);
+    }
+
+    .laptop-bezel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 22px 22px 8px 8px;
+      background: linear-gradient(180deg, #171417 0%, #0d0b0d 100%);
+      box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .08);
+    }
+
+    .laptop-bezel::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 9px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, #3f4b5b 0%, #161a20 70%);
+      box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .07);
+    }
+
+    .laptop-base {
+      position: absolute;
+      left: -34px;
+      top: 646px;
+      width: 1004px;
+      height: 30px;
+      border-radius: 4px 4px 18px 18px;
+      background: linear-gradient(180deg, #f3f5f8 0%, #d7dce3 55%, #aeb6c0 100%);
+      box-shadow:
+        0 26px 46px rgba(77, 20, 45, .26),
+        inset 0 2px 3px rgba(255, 255, 255, .85),
+        inset 0 -2px 4px rgba(0, 0, 0, .14);
+      transform-origin: 50% 0;
+      transform: rotateX(48deg);
+    }
+
+    .laptop-base::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 120px;
+      height: 8px;
+      transform: translateX(-50%);
+      border-radius: 0 0 8px 8px;
+      background: linear-gradient(180deg, #9da5b0, #c8cfd7);
+    }
+
+    /* Laptop Display */
+    .screen {
+      position: absolute;
+      left: 18.8px;
+      top: 21.7px;
+      width: 894.4px;
+      height: 604.7px;
+      border-radius: 4px;
+      background: #14080e;
+      overflow: hidden;
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    .screen-idle {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255, 196, 221, .45), transparent 55%),
+        radial-gradient(circle at 75% 75%, rgba(231, 136, 172, .35), transparent 60%),
+        linear-gradient(135deg, #2d0e1c 0%, #581c37 52%, #92355e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity .35s ease;
+      z-index: 2;
+    }
+
+    .screen-idle strong {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      letter-spacing: .16em;
+      color: rgba(255, 234, 242, .9);
+    }
+
+    .screen-idle span {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255, 214, 230, .75);
+    }
+
+    body.is-case .screen-idle {
+      opacity: 0;
+    }
+
+    .screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, 0) 40%);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .case-canvas-wrap {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    .case-canvas-wrap canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .screen .flash {
+      position: absolute;
+      inset: 0;
+      background: #fff5f9;
+      opacity: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .screen-hit {
+      position: absolute;
+      left: 272.8px;
+      top: 102.7px;
+      width: 894.4px;
+      height: 604.7px;
+      z-index: 10;
+      cursor: pointer;
+      display: none;
+    }
+
+    body.is-case .screen-hit {
+      display: block;
+    }
+
+    /* Viewport-pinned UI */
+    .ui {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .tag {
+      position: fixed;
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 0;
+      text-decoration: none;
+      cursor: pointer;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 650;
+      font-size: calc(16.5 * var(--n));
+      letter-spacing: -.02em;
+      color: var(--ink);
+      height: calc(37 * var(--n));
+      padding: 0 calc(18 * var(--n));
+      white-space: nowrap;
+      box-sizing: border-box;
+      box-shadow: 0 calc(3 * var(--n)) 0 rgba(117, 34, 71, .2), 0 calc(6 * var(--n)) calc(14 * var(--n)) rgba(117, 34, 71, .16);
+      transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .tag:hover {
+      transform: translateY(calc(-2 * var(--n))) rotate(-1.5deg);
+      box-shadow: 0 calc(5 * var(--n)) 0 rgba(117, 34, 71, .24), 0 calc(10 * var(--n)) calc(18 * var(--n)) rgba(117, 34, 71, .2);
+    }
+
+    .tag:active {
+      transform: translateY(calc(1 * var(--n)));
+      box-shadow: 0 calc(1 * var(--n)) 0 rgba(117, 34, 71, .2);
+    }
+
+    .t1 { left: calc(30 * var(--n)); top: calc(7 * var(--n)); }
+    .t2 { left: calc(198 * var(--n)); top: calc(7 * var(--n)); }
+    .t3 { right: calc(194 * var(--n)); top: calc(7 * var(--n)); }
+    .t4 { right: calc(32 * var(--n)); top: calc(7 * var(--n)); }
+
+    .logo {
+      position: fixed;
+      left: 50%;
+      top: calc(14 * var(--n));
+      translate: -50% 0;
+      background: none;
+      border: 0;
+      padding: 0;
+      color: var(--pink-900);
+      cursor: pointer;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: calc(19 * var(--n));
+      letter-spacing: .16em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s ease;
+    }
+
+    body.is-case .logo {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .hint {
+      position: fixed;
+      left: 50%;
+      bottom: calc(22 * var(--n));
+      translate: -50% 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc(8 * var(--n));
+      font-size: calc(12 * var(--n));
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--pink-900);
+      opacity: .85;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .hint .line {
+      position: relative;
+      width: calc(1.5 * var(--n));
+      height: calc(22 * var(--n));
+      background: rgba(77, 20, 45, .28);
+      overflow: hidden;
+    }
+
+    .hint .line::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -40%;
+      width: 100%;
+      height: 40%;
+      background: var(--pink-900);
+      animation: drip 1.6s cubic-bezier(.6, 0, .4, 1) infinite;
+    }
+
+    @keyframes drip {
+      to { top: 100%; }
+    }
+
+    body.is-case .hint,
+    body.busy .hint {
+      visibility: hidden;
+    }
+
+    /* Case UI */
+    .ticket {
+      position: fixed;
+      right: calc(32 * var(--n));
+      top: calc(98 * var(--n));
+      width: calc(348 * var(--n));
+      height: calc(182 * var(--n));
+      box-sizing: border-box;
+      background: #fff;
+      color: var(--ink);
+      border-radius: calc(3 * var(--n));
+      box-shadow: 0 calc(18 * var(--n)) calc(40 * var(--n)) rgba(77, 20, 45, .22);
+      padding: calc(26 * var(--n)) calc(34 * var(--n)) 0 calc(44 * var(--n));
+      transform-origin: 50% 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ticket .hole {
+      position: absolute;
+      width: calc(21 * var(--n));
+      height: calc(21 * var(--n));
+      border-radius: 50%;
+      background: var(--hole);
+      box-shadow: inset 0 calc(2 * var(--n)) calc(3 * var(--n)) rgba(77, 20, 45, .28);
+    }
+
+    .ticket .hole.tl { left: calc(12 * var(--n)); top: calc(12 * var(--n)); }
+    .ticket .hole.tr { right: calc(12 * var(--n)); top: calc(12 * var(--n)); }
+    .ticket .hole.bl { left: calc(12 * var(--n)); bottom: calc(12 * var(--n)); }
+    .ticket .hole.br { right: calc(12 * var(--n)); bottom: calc(12 * var(--n)); }
+
+    .ticket h2 {
+      margin: 0;
+      font-family: 'Anton', sans-serif;
+      font-weight: 400;
+      font-size: calc(40 * var(--n));
+      line-height: 1.04;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+      color: var(--pink-900);
+    }
+
+    .ticket .rows {
+      margin-top: calc(10 * var(--n));
+    }
+
+    .ticket .row {
+      text-align: right;
+      font-weight: 700;
+      font-size: calc(11.5 * var(--n));
+      letter-spacing: .02em;
+      padding: calc(4 * var(--n)) 0 calc(3 * var(--n));
+      border-bottom: 1.5px dotted rgba(77, 20, 45, .38);
+      color: var(--ink);
+    }
+
+    .desc {
+      position: fixed;
+      left: calc(28 * var(--n));
+      top: calc(326 * var(--n));
+      width: calc(184 * var(--n));
+      pointer-events: none;
+      color: var(--pink-900);
+    }
+
+    .desc .k {
+      font-weight: 700;
+      font-size: calc(17 * var(--n));
+      letter-spacing: -.02em;
+      opacity: 0;
+    }
+
+    .desc p {
+      margin: calc(14 * var(--n)) 0 0;
+      font-size: calc(14.5 * var(--n));
+      line-height: 1.38;
+      font-weight: 550;
+      color: rgba(77, 20, 45, .92);
+      opacity: 0;
+    }
+
+    .desc .num {
+      margin-top: calc(22 * var(--n));
+      font-size: calc(12 * var(--n));
+      letter-spacing: .16em;
+      font-weight: 700;
+      color: rgba(77, 20, 45, .68);
+      opacity: 0;
+    }
+
+    .nav-case {
+      position: fixed;
+      bottom: calc(150 * var(--n));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc(9 * var(--n));
+      background: none;
+      border: 0;
+      padding: 0;
+      color: var(--pink-900);
+      cursor: pointer;
+      font-family: 'Inter Tight', sans-serif;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+    }
+
+    .nav-case.prev { left: calc(95 * var(--n)); }
+    .nav-case.next { right: calc(95 * var(--n)); }
+
+    body.is-case .nav-case {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    body.is-case .nav-case.prev.dim {
+      opacity: .45;
+    }
+
+    .nav-case .c {
+      width: calc(50 * var(--n));
+      height: calc(50 * var(--n));
+      border-radius: 50%;
+      border: 1.6px solid rgba(77, 20, 45, .85);
+      background: rgba(255, 255, 255, .45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      transition: transform .25s cubic-bezier(.2, .8, .2, 1), background-color .25s ease, border-color .25s ease;
+    }
+
+    .nav-case .c svg {
+      width: calc(24 * var(--n));
+      height: calc(24 * var(--n));
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-case.next .c {
+      background: var(--pink-900);
+      color: #fff;
+      border-color: var(--pink-900);
+    }
+
+    .nav-case:hover .c {
+      transform: scale(1.08);
+    }
+
+    .nav-case.next:hover .c {
+      background: var(--pink-800);
+      border-color: var(--pink-800);
+    }
+
+    .nav-case .lbl {
+      font-weight: 650;
+      font-size: calc(15 * var(--n));
+      line-height: 1.05;
+      text-align: center;
+    }
+
+    /* Modals: Contact + Resume */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(77, 20, 45, .32);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      width: min(92vw, 400px);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 24px 24px 20px;
+      box-shadow: 0 24px 60px rgba(77, 20, 45, .28);
+      transform: translateY(10px) scale(.97);
+      transition: transform .25s cubic-bezier(.2, .8, .2, 1);
+      box-sizing: border-box;
+    }
+
+    .modal-card.wide {
+      width: min(94vw, 680px);
+      max-height: 84vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 24px 18px;
+    }
+
+    .modal-backdrop.open .modal-card {
+      transform: none;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-family: 'Anton', sans-serif;
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--pink-900);
+      line-height: 1;
+    }
+
+    .modal-sub {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: rgba(36, 12, 23, .72);
+      font-weight: 500;
+    }
+
+    .x-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--pink-100);
+      color: var(--pink-900);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .contact-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1.5px dotted rgba(77, 20, 45, .3);
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .contact-row a {
+      color: var(--pink-800);
+      text-decoration: none;
+      text-align: right;
+      word-break: break-all;
+    }
+
+    .contact-row a:hover {
+      text-decoration: underline;
+    }
+
+    .contact-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .c-btn {
+      flex: 1;
+      height: 38px;
+      border-radius: 8px;
+      border: 0;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--pink-900);
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .c-btn.sec {
+      background: var(--pink-100);
+      color: var(--pink-900);
+    }
+
+    .resume-scroll {
+      overflow-y: auto;
+      padding-right: 6px;
+      touch-action: pan-y;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .res-sec {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(77, 20, 45, .14);
+    }
+
+    .res-sec:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .res-sec h4 {
+      margin: 0 0 8px;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--pink-700);
+      font-weight: 800;
+    }
+
+    .res-item {
+      margin-bottom: 10px;
+    }
+
+    .res-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .res-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--pink-900);
+    }
+
+    .res-top span.dt {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--pink-700);
+    }
+
+    .res-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(36, 12, 23, .7);
+      margin-top: 2px;
+    }
+
+    .res-ul {
+      margin: 5px 0 0 16px;
+      padding: 0;
+      font-size: 12.5px;
+      line-height: 1.42;
+      color: rgba(36, 12, 23, .86);
+    }
+
+    .res-ul li {
+      margin-bottom: 3px;
+    }
+
+    .skills-grid {
+      display: grid;
+      gap: 6px;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .skills-grid div b {
+      color: var(--pink-900);
+    }
+
+    /* Mobile-only UI clones */
+    .m-only {
+      display: none;
+    }
+
+    @media (max-width: 820px) {
+      .frame .wm,
+      .frame .script,
+      .frame .badge {
+        display: none;
+      }
+
+      .m-only {
+        display: block;
+      }
+
+      .tag {
+        font-size: 13px;
+        height: 30px;
+        padding: 0 12px;
+        box-shadow: 0 2px 0 rgba(117, 34, 71, .18), 0 4px 10px rgba(117, 34, 71, .16);
+      }
+
+      .tag:hover {
+        transform: translateY(-2px) rotate(-1.5deg);
+        box-shadow: 0 4px 0 rgba(117, 34, 71, .22), 0 8px 14px rgba(117, 34, 71, .18);
+      }
+
+      .tag:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 0 rgba(117, 34, 71, .2);
+      }
+
+      .t1 { left: 12px; top: 12px; }
+      .t2 { left: auto; right: 12px; top: 12px; }
+      .t3 { left: 12px; right: auto; top: calc(12px + 44 * var(--n)); }
+      .t4 { right: 12px; top: calc(12px + 44 * var(--n)); }
+
+      body.is-case .t3,
+      body.is-case .t4 {
+        visibility: hidden;
+      }
+
+      .m-wm {
+        position: fixed;
+        left: 3vw;
+        width: 94vw;
+        top: calc(12px + 96 * var(--n));
+        height: auto;
+        overflow: visible;
+        pointer-events: none;
+      }
+
+      .m-script {
+        position: fixed;
+        right: 6vw;
+        top: calc(12px + 96 * var(--n) + 14vw);
+        font-family: 'Caveat Brush', cursive;
+        font-size: 13.5vw;
+        line-height: 1;
+        color: #fff;
+        letter-spacing: -.5px;
+        transform: rotate(-7deg);
+        transform-origin: 0 50%;
+        text-shadow: 0 2px 10px rgba(117, 34, 71, .24);
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      .m-badge {
+        position: fixed;
+        right: 2vw;
+        top: calc(12px + 96 * var(--n) + 9vw);
+        width: 27vw;
+        height: calc(27vw * 1030 / 582);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .m-badge .badge {
+        display: block;
+        left: 0;
+        top: 0;
+        width: 582px;
+        height: 1030px;
+        transform-origin: 288px 0;
+        translate: calc(-288px + 13.5vw) 0;
+        scale: var(--mbs);
+        pointer-events: none;
+      }
+
+      .m-badge .badge .hit {
+        pointer-events: none;
+      }
+
+      .logo {
+        display: none;
+      }
+
+      .hint {
+        bottom: 18px;
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      .ticket {
+        left: 50%;
+        right: auto;
+        top: 62px;
+        translate: -50% 0;
+        width: min(86vw, 360px);
+        height: auto;
+        padding: 22px 26px 16px 36px;
+        border-radius: 3px;
+        box-shadow: 0 14px 32px rgba(77, 20, 45, .22);
+      }
+
+      .ticket .hole {
+        width: 15px;
+        height: 15px;
+      }
+      .ticket .hole.tl { left: 9px; top: 9px; }
+      .ticket .hole.tr { right: 9px; top: 9px; }
+      .ticket .hole.bl { left: 9px; bottom: 9px; }
+      .ticket .hole.br { right: 9px; bottom: 9px; }
+
+      .ticket h2 {
+        font-size: 30px;
+      }
+
+      .ticket .rows {
+        margin-top: 6px;
+      }
+
+      .ticket .row {
+        font-size: 10.5px;
+        padding: 3px 0 2px;
+      }
+
+      .desc {
+        left: 50%;
+        translate: -50% 0;
+        top: calc(62px + var(--th) + 18px);
+        width: min(86vw, 360px);
+        text-align: center;
+      }
+
+      .desc .k {
+        font-size: 15px;
+      }
+
+      .desc p {
+        margin-top: 8px;
+        font-size: 13.5px;
+      }
+
+      .desc .num {
+        display: none;
+      }
+
+      .nav-case {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 2.2vh);
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .nav-case.prev { left: 6vw; }
+      .nav-case.next { right: 6vw; flex-direction: row-reverse; }
+
+      .nav-case .c {
+        width: 42px;
+        height: 42px;
+      }
+
+      .nav-case .c svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .nav-case .lbl {
+        font-size: 12.5px;
+        text-align: left;
+      }
+
+      .nav-case.next .lbl {
+        text-align: right;
+      }
+
+      .nav-case .lbl br {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <input id="photoInput" type="file" accept="image/*" hidden>
+
+  <div class="stage">
+    <div class="frame">
+      <svg class="wm pre" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="wmGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset=".55" stop-color="#fff0f6" stop-opacity=".92"/>
+            <stop offset="1" stop-color="#ffd6e6" stop-opacity=".3"/>
+          </linearGradient>
+        </defs>
+        <text x="20" y="214" textLength="1400" lengthAdjust="spacingAndGlyphs"
+              fill="url(#wmGrad)" font-family="'Inter Tight', sans-serif"
+              font-weight="900" font-size="268" letter-spacing="-4">NANDU</text>
+      </svg>
+
+      <div class="hero-subject">
+        <div class="portrait-ring">
+          <div class="portrait-inner" id="heroPortraitBox">
+            <img id="heroPortraitImg" alt="Nindujerla Nandu">
+            <div class="portrait-fallback">
+              <div class="mono">N</div>
+              <div class="sub">Nindujerla Nandu</div>
+            </div>
+            <button class="photo-btn" id="photoBtn" type="button">Upload Nandu's photo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="badge pre">
+        <img class="badge-img" alt="">
+        <div class="card">
+          <h4>ENGINEER<br>CARD</h4>
+          <div class="yr">2026</div>
+          <div class="role">B.TECH CSE // AI &amp; ML DEVELOPER</div>
+          <div class="ph" id="badgePh">
+            <img id="badgePhImg" alt="Nandu">
+            <span class="ph-mono">N</span>
+          </div>
+          <div class="row"><span>NAME</span><b>N. NANDU</b></div>
+          <div class="row"><span>FOCUS</span><b>AI/ML &amp; SOFTWARE</b></div>
+          <div class="row"><span>PHONE</span><b>7093752646</b></div>
+          <div class="row"><span>EMAIL</span><b>NANDUNANDHU413@GMAIL.COM</b></div>
+        </div>
+        <div class="hit"></div>
+      </div>
+
+      <div class="script pre">ai-ml &amp; software</div>
+
+      <div class="laptop-stage">
+        <div class="laptop">
+          <div class="laptop-lid">
+            <div class="laptop-bezel">
+              <div class="screen">
+                <div class="screen-idle">
+                  <strong>NANDU</strong>
+                  <span>B.Tech CSE · AI/ML &amp; Full Stack</span>
+                </div>
+                <div class="case-canvas-wrap" data-case="0"><canvas width="894" height="605"></canvas></div>
+                <div class="case-canvas-wrap" data-case="1"><canvas width="894" height="605"></canvas></div>
+                <div class="case-canvas-wrap" data-case="2"><canvas width="894" height="605"></canvas></div>
+                <div class="flash"></div>
+              </div>
+            </div>
+          </div>
+          <div class="laptop-base"></div>
+        </div>
+      </div>
+
+      <div class="screen-hit"></div>
+    </div>
+  </div>
+
+  <div class="ui">
+    <button class="tag t1 pre" type="button">my profile</button>
+    <button class="tag t2 pre" type="button">projects</button>
+    <a class="tag t3 pre" href="#resume">resume &amp; skills</a>
+    <a class="tag t4 pre" href="#contact">contact me</a>
+
+    <button class="logo" type="button">NINDUJERLA NANDU</button>
+
+    <div class="m-only">
+      <svg class="m-wm pre" viewBox="0 0 1440 240" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="mWmGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset=".55" stop-color="#fff0f6" stop-opacity=".92"/>
+            <stop offset="1" stop-color="#ffd6e6" stop-opacity=".34"/>
+          </linearGradient>
+        </defs>
+        <text x="14" y="210" textLength="1412" lengthAdjust="spacingAndGlyphs"
+              fill="url(#mWmGrad)" font-family="'Inter Tight', sans-serif"
+              font-weight="900" font-size="250" letter-spacing="-4">NANDU</text>
+      </svg>
+      <div class="m-script pre">ai-ml &amp; software</div>
+      <div class="m-badge pre"></div>
+    </div>
+
+    <div class="ticket">
+      <span class="hole tl"></span>
+      <span class="hole tr"></span>
+      <span class="hole bl"></span>
+      <span class="hole br"></span>
+      <h2></h2>
+      <div class="rows">
+        <div class="row"></div>
+        <div class="row"></div>
+        <div class="row"></div>
+      </div>
+    </div>
+
+    <div class="desc">
+      <div class="k"></div>
+      <p></p>
+      <div class="num"></div>
+    </div>
+
+    <button class="nav-case prev" type="button">
+      <span class="c">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </span>
+      <span class="lbl">previous <br>project</span>
+    </button>
+
+    <button class="nav-case next" type="button">
+      <span class="c">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+      <span class="lbl">next <br>project</span>
+    </button>
+
+    <div class="hint pre">
+      <span class="line"></span>
+      <span>scroll into the projects</span>
+    </div>
+  </div>
+
+  <!-- Resume & Skills Modal -->
+  <div class="modal-backdrop" id="resumePop" aria-hidden="true">
+    <div class="modal-card wide">
+      <div class="modal-head">
+        <div>
+          <h3>NINDUJERLA NANDU</h3>
+          <p class="modal-sub">B.Tech Computer Science &amp; Engineering · AI/ML &amp; Software Developer</p>
+        </div>
+        <button class="x-btn" id="closeResumeBtn" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="resume-scroll">
+        <div class="res-sec">
+          <h4>Education</h4>
+          <div class="res-item">
+            <div class="res-top"><span>Audi Sankara College of Engineering &amp; Technology</span><span class="dt">Aug. 2023 – May 2027</span></div>
+            <div class="res-sub">B.Tech Computer Science and Engineering · Gudur, Tirupati</div>
+          </div>
+          <div class="res-item">
+            <div class="res-top"><span>Narayana Junior College</span><span class="dt">Aug. 2021 – May 2023</span></div>
+            <div class="res-sub">Mathematics, Physics, Chemistry · Nellore, Andhra Pradesh</div>
+          </div>
+          <div class="res-item">
+            <div class="res-top"><span>St Marys English Medium High School</span><span class="dt">June 2020 – March 2021</span></div>
+            <div class="res-sub">10th Standard · Nellore, Andhra Pradesh</div>
+          </div>
+        </div>
+
+        <div class="res-sec">
+          <h4>Experience</h4>
+          <div class="res-item">
+            <div class="res-top"><span>Undergraduate Research Assistant</span><span class="dt">Sep. 2023 – Present</span></div>
+            <div class="res-sub">Academic Project Developer · Audi Sankara College of Engineering &amp; Technology, Gudur, Tirupati</div>
+            <ul class="res-ul">
+              <li>Developed an AI-Based Face Detection System for attendance using Python, AI/ML and computer vision.</li>
+              <li>Worked on an Intelligent Public Transport Planning Platform as a hackathon project.</li>
+              <li>Applied data analysis and AI/ML concepts to solve real-world problems.</li>
+            </ul>
+          </div>
+          <div class="res-item">
+            <div class="res-top"><span>Information Technology Support Specialist</span><span class="dt">June 2024 – Present</span></div>
+            <div class="res-sub">Artificial Intelligence &amp; Data Science · Audi Sankara College, Gudur</div>
+            <ul class="res-ul">
+              <li>Developed and tested software projects using Python, Java, and web technologies.</li>
+              <li>Troubleshoot basic programming and application issues during project development.</li>
+              <li>Used Git/GitHub and VS Code for development and project management.</li>
+            </ul>
+          </div>
+          <div class="res-item">
+            <div class="res-top"><span>Artificial Intelligence Research Assistant</span><span class="dt">May 2025 – July 2026</span></div>
+            <div class="res-sub">Audi Sankara College of Engineering &amp; Technology</div>
+            <ul class="res-ul">
+              <li>Conducted hands-on exploration of AI/ML and Computer Vision to develop innovative, data-driven solutions.</li>
+              <li>Developed a game in Java to test the generated dungeons.</li>
+              <li>Contributed 50K+ lines of code to an established codebase via Git.</li>
+              <li>Applied Python, machine learning and analytical techniques to transform problem statements into practical AI-based applications.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="res-sec">
+          <h4>Projects</h4>
+          <div class="res-item">
+            <div class="res-top"><span>AI-Based Face Detection System for Attendance</span><span class="dt">June 2025 – Present</span></div>
+            <div class="res-sub">Python | AI/ML | Computer Vision</div>
+            <ul class="res-ul">
+              <li>Developed an AI-based system for automated student attendance in government schools.</li>
+              <li>Applied face detection and recognition techniques to identify students.</li>
+              <li>Designed the system to streamline attendance and reduce manual effort.</li>
+            </ul>
+          </div>
+          <div class="res-item">
+            <div class="res-top"><span>Intelligent Public Transport Planning Platform</span><span class="dt">May 2026 – Sep. 2026</span></div>
+            <div class="res-sub">Python | AI/ML | Data Analytics</div>
+            <ul class="res-ul">
+              <li>Developed a hackathon project focused on improving public transportation planning.</li>
+              <li>Designed a data-driven platform to support route planning and decision-making.</li>
+              <li>Applied AI/ML and data analytics concepts to improve transportation planning.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="res-sec">
+          <h4>Technical Skills</h4>
+          <div class="skills-grid">
+            <div><b>Languages:</b> Java, Python, C/C++, SQL (Postgres), JavaScript, HTML/CSS, R</div>
+            <div><b>Frameworks:</b> React, Node.js, Flask, JUnit, WordPress, Material-UI, FastAPI</div>
+            <div><b>Developer Tools:</b> Git, Docker, TravisCI, Google Cloud Platform, VS Code, Visual Studio, PyCharm, IntelliJ, Eclipse</div>
+            <div><b>Libraries:</b> pandas, NumPy, Matplotlib</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Modal -->
+  <div class="modal-backdrop" id="contactPop" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h3>CONTACT NANDU</h3>
+          <p class="modal-sub">Open to AI/ML research, internships &amp; full-stack engineering roles.</p>
+        </div>
+        <button class="x-btn" id="closeContactBtn" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="contact-row"><span>NAME</span><span>NINDUJERLA NANDU</span></div>
+      <div class="contact-row"><span>PHONE</span><a href="tel:7093752646">7093752646</a></div>
+      <div class="contact-row"><span>EMAIL</span><a href="mailto:nandunandhu413@gmail.com">nandunandhu413@gmail.com</a></div>
+      <div class="contact-row"><span>LINKEDIN</span><a href="https://www.linkedin.com/in/nindujerla-nandu-6b4a04321" target="_blank" rel="noopener">in/nindujerla-nandu-6b4a04321</a></div>
+      <div class="contact-actions">
+        <button class="c-btn" id="copyEmailBtn" type="button">Copy Email</button>
+        <a class="c-btn sec" href="https://www.linkedin.com/in/nindujerla-nandu-6b4a04321" target="_blank" rel="noopener">Open LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const CF = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/';
+      const BADGE_URL = 'https://images.higgs.ai/?default=1&output=webp&url=' +
+        encodeURIComponent(CF + 'hf_20261111_001143_65c037e6-0768-4b12-9f17-17be132ce16b.png') +
+        '&w=1200&q=85';
+
+      const CASES = [
+        {
+          title: 'FACE ATTENDANCE',
+          rows: ['GOVT. SCHOOLS', 'PYTHON · AI/ML · CV', 'JUNE 2025 – PRESENT'],
+          key: '// face attendance',
+          text: '— an AI-based automated student attendance system using computer vision and face recognition to reduce manual effort.'
+        },
+        {
+          title: 'TRANSIT PLANNER',
+          rows: ['HACKATHON PROJECT', 'PYTHON · DATA ANALYTICS', 'MAY – SEP 2026'],
+          key: '// transit planner',
+          text: '— a data-driven platform applying AI/ML and analytics to support public transport route planning and decision-making.'
+        },
+        {
+          title: 'AI & JAVA SYSTEMS',
+          rows: ['AUDI SANKARA CSE', 'JAVA · PYTHON · GIT', 'SEP 2023 – PRESENT'],
+          key: '// ai & java systems',
+          text: '— AI/ML research, a procedural Java dungeon testing game, and 50K+ lines of code contributed via Git.'
+        }
+      ];
+
+      const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const dur = ms => (RM ? 0 : ms);
+      const easeDefault = 'cubic-bezier(.2,.8,.2,1)';
+
+      const stageEl = document.querySelector('.stage');
+      const frameEl = document.querySelector('.frame');
+      const heroSubjectEl = document.querySelector('.hero-subject');
+      const wmEl = document.querySelector('.frame .wm');
+      const scriptEl = document.querySelector('.frame .script');
+      const badgeEl = document.querySelector('.frame .badge');
+      const hitEl = document.querySelector('.frame .badge .hit');
+      const laptopEl = document.querySelector('.laptop');
+      const flashEl = document.querySelector('.screen .flash');
+      const screenHitEl = document.querySelector('.screen-hit');
+      const caseWraps = Array.from(document.querySelectorAll('.case-canvas-wrap'));
+      const caseCanvases = caseWraps.map(w => w.querySelector('canvas'));
+
+      const navTags = Array.from(document.querySelectorAll('.ui .tag'));
+      const t1El = document.querySelector('.t1');
+      const t2El = document.querySelector('.t2');
+      const t3El = document.querySelector('.t3');
+      const t4El = document.querySelector('.t4');
+      const logoEl = document.querySelector('.logo');
+      const hintEl = document.querySelector('.hint');
+
+      const mWmEl = document.querySelector('.m-wm');
+      const mScriptEl = document.querySelector('.m-script');
+      const mBadgeWrap = document.querySelector('.m-badge');
+
+      const ticketEl = document.querySelector('.ticket');
+      const ticketH2 = ticketEl.querySelector('h2');
+      const ticketRows = Array.from(ticketEl.querySelectorAll('.row'));
+      const descEl = document.querySelector('.desc');
+      const descKey = descEl.querySelector('.k');
+      const descP = descEl.querySelector('p');
+      const descNum = descEl.querySelector('.num');
+      const descKids = [descKey, descP, descNum];
+      const prevBtn = document.querySelector('.nav-case.prev');
+      const nextBtn = document.querySelector('.nav-case.next');
+
+      const photoInput = document.getElementById('photoInput');
+      const photoBtn = document.getElementById('photoBtn');
+      const heroPortraitBox = document.getElementById('heroPortraitBox');
+      const heroPortraitImg = document.getElementById('heroPortraitImg');
+      const badgePh = document.getElementById('badgePh');
+      const badgePhImg = document.getElementById('badgePhImg');
+
+      const resumePop = document.getElementById('resumePop');
+      const closeResumeBtn = document.getElementById('closeResumeBtn');
+      const contactPop = document.getElementById('contactPop');
+      const copyEmailBtn = document.getElementById('copyEmailBtn');
+      const closeContactBtn = document.getElementById('closeContactBtn');
+
+      badgeEl.querySelector('.badge-img').src = BADGE_URL;
+
+      const mBadgeInner = badgeEl.cloneNode(true);
+      mBadgeInner.classList.remove('pre');
+      mBadgeWrap.appendChild(mBadgeInner);
+
+      const mBadgePh = mBadgeInner.querySelector('.ph');
+      const mBadgePhImg = mBadgeInner.querySelector('.ph img');
+
+      // Portrait loader
+      const STORAGE_KEY = 'nandu_portrait_v1';
+      function applyPortrait(src) {
+        if (!src) return;
+        [heroPortraitImg, badgePhImg, mBadgePhImg].forEach(img => {
+          if (img) img.src = src;
+        });
+        [heroPortraitBox, badgePh, mBadgePh].forEach(box => {
+          if (box) box.classList.add('has-img');
+        });
+        photoBtn.textContent = 'Change photo';
+      }
+
+      function tryLocalFiles(list) {
+        if (!list.length) return;
+        const probe = new Image();
+        probe.onload = () => applyPortrait(list[0]);
+        probe.onerror = () => tryLocalFiles(list.slice(1));
+        probe.src = list[0];
+      }
+
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) applyPortrait(saved);
+        else tryLocalFiles(['nandu.png', 'nandu.jpg', 'nandu.jpeg', 'nandu.webp']);
+      } catch {
+        tryLocalFiles(['nandu.png', 'nandu.jpg', 'nandu.jpeg', 'nandu.webp']);
+      }
+
+      function handlePhotoFile(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result;
+          applyPortrait(dataUrl);
+          try { localStorage.setItem(STORAGE_KEY, dataUrl); } catch {}
+        };
+        reader.readAsDataURL(file);
+      }
+
+      photoBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        photoInput.click();
+      });
+      photoInput.addEventListener('change', () => {
+        if (photoInput.files[0]) handlePhotoFile(photoInput.files[0]);
+      });
+
+      window.addEventListener('dragover', e => e.preventDefault());
+      window.addEventListener('drop', e => {
+        e.preventDefault();
+        if (e.dataTransfer.files[0]) handlePhotoFile(e.dataTransfer.files[0]);
+      });
+
+      const wms = [wmEl, mWmEl];
+      const scripts = [scriptEl, mScriptEl];
+      const badges = [badgeEl, mBadgeInner];
+
+      let mode = 'hero';
+      let cur = 0;
+      let busy = false;
+      let swayAnims = [];
+      let swingAnim = null;
+      let canvasRaf = null;
+      let activeCanvasIdx = -1;
+
+      const HERO_LAPTOP_TF = 'translate3d(0px, 212px, 0px) scale(0.42) rotateX(18deg) rotateY(-14deg) rotateZ(-4deg)';
+      const CASE_LAPTOP_TF = 'translate3d(0px, 0px, 0px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
+
+      const isMobile = () => window.innerWidth <= 820;
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+
+      function anim(el, kf, opts) {
+        el.getAnimations().forEach(a => a.cancel());
+        return el.animate(kf, opts);
+      }
+
+      // Live Animated Project Previews inside the Laptop Screen
+      function drawFaceCase(ctx, t) {
+        const W = 894, H = 605;
+        const g = ctx.createLinearGradient(0, 0, W, H);
+        g.addColorStop(0, '#180912');
+        g.addColorStop(1, '#361124');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+
+        // Subtle grid
+        ctx.strokeStyle = 'rgba(246, 184, 208, 0.08)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < W; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        }
+        for (let y = 0; y < H; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+
+        // Top status bar
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.fillRect(34, 28, W - 68, 46);
+        ctx.fillStyle = '#ffd6e6';
+        ctx.font = '700 15px "Inter Tight", sans-serif';
+        ctx.fillText('AI-BASED FACE DETECTION ATTENDANCE SYSTEM  ·  GOVT. SCHOOLS', 54, 56);
+        ctx.fillStyle = '#7bf0b8';
+        ctx.font = '700 13px "Inter Tight", sans-serif';
+        ctx.fillText('● LIVE CV STREAM', W - 185, 56);
+
+        // Left Camera Frame
+        const cx = 62, cy = 104, cw = 460, ch = 444;
+        ctx.fillStyle = 'rgba(15, 6, 11, 0.72)';
+        ctx.fillRect(cx, cy, cw, ch);
+        ctx.strokeStyle = 'rgba(246, 184, 208, 0.25)';
+        ctx.strokeRect(cx, cy, cw, ch);
+
+        // Stylized face silhouette + CV mesh
+        const fx = cx + cw / 2;
+        const fy = cy + ch / 2 - 12 + Math.sin(t * 1.6) * 5;
+        ctx.strokeStyle = 'rgba(255, 214, 230, 0.35)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(fx, fy, 74, 96, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Landmark dots
+        const pts = [
+          [-28, -22], [28, -22], [0, 8], [-24, 42], [24, 42], [0, 52],
+          [-56, -10], [56, -10], [0, -78], [0, 88]
+        ];
+        ctx.fillStyle = '#ff9ec4';
+        pts.forEach(([dx, dy], idx) => {
+          const px = fx + dx;
+          const py = fy + dy;
+          ctx.beginPath();
+          ctx.arc(px, py, 3 + Math.sin(t * 4 + idx) * 0.8, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // Connect mesh lines
+        ctx.strokeStyle = 'rgba(255, 158, 196, 0.45)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(fx - 28, fy - 22); ctx.lineTo(fx + 28, fy - 22);
+        ctx.lineTo(fx, fy + 8); ctx.closePath();
+        ctx.moveTo(fx - 24, fy + 42); ctx.lineTo(fx, fy + 52); ctx.lineTo(fx + 24, fy + 42);
+        ctx.stroke();
+
+        // Corner bounding box
+        const bx = fx - 112, by = fy - 124, bw = 224, bh = 256;
+        ctx.strokeStyle = '#7bf0b8';
+        ctx.lineWidth = 3;
+        const L = 26;
+        [[bx, by, 1, 1], [bx + bw, by, -1, 1], [bx, by + bh, 1, -1], [bx + bw, by + bh, -1, -1]].forEach(([x, y, sx, sy]) => {
+          ctx.beginPath();
+          ctx.moveTo(x + sx * L, y); ctx.lineTo(x, y); ctx.lineTo(x, y + sy * L);
+          ctx.stroke();
+        });
+
+        // Scanning laser line
+        const scanY = by + ((t * 90) % bh);
+        const sg = ctx.createLinearGradient(0, scanY - 14, 0, scanY + 14);
+        sg.addColorStop(0, 'rgba(123, 240, 184, 0)');
+        sg.addColorStop(0.5, 'rgba(123, 240, 184, 0.55)');
+        sg.addColorStop(1, 'rgba(123, 240, 184, 0)');
+        ctx.fillStyle = sg;
+        ctx.fillRect(bx, scanY - 14, bw, 28);
+
+        ctx.fillStyle = '#7bf0b8';
+        ctx.font = '700 13px "Inter Tight", sans-serif';
+        ctx.fillText('MATCH: 99.1%  ·  STUDENT VERIFIED', bx, by - 10);
+
+        // Right Attendance Panel
+        const rx = 550, rw = 282;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.fillRect(rx, cy, rw, ch);
+        ctx.fillStyle = '#fff0f6';
+        ctx.font = '700 15px "Inter Tight", sans-serif';
+        ctx.fillText('AUTOMATED LOG', rx + 20, cy + 36);
+
+        const rows = [
+          ['Roll #104  ·  A. Priya', '09:02 AM', '#7bf0b8'],
+          ['Roll #105  ·  K. Rahul', '09:02 AM', '#7bf0b8'],
+          ['Roll #106  ·  S. Divya', '09:03 AM', '#7bf0b8'],
+          ['Roll #107  ·  M. Karthik', '09:03 AM', '#7bf0b8'],
+          ['Roll #108  ·  R. Sneha', 'SCANNING', '#ff9ec4']
+        ];
+        rows.forEach(([name, st, col], i) => {
+          const y = cy + 68 + i * 62;
+          ctx.fillStyle = 'rgba(255, 214, 230, 0.08)';
+          ctx.fillRect(rx + 18, y, rw - 36, 48);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '600 13px "Inter Tight", sans-serif';
+          ctx.fillText(name, rx + 30, y + 29);
+          ctx.fillStyle = col;
+          ctx.font = '700 11px "Inter Tight", sans-serif';
+          ctx.fillText(st, rx + rw - 82, y + 29);
+        });
+
+        ctx.fillStyle = 'rgba(255, 214, 230, 0.72)';
+        ctx.font = '600 12px "Inter Tight", sans-serif';
+        ctx.fillText('Python · OpenCV · AI/ML · Postgres', rx + 20, cy + ch - 22);
+      }
+
+      function drawTransitCase(ctx, t) {
+        const W = 894, H = 605;
+        const g = ctx.createLinearGradient(0, 0, W, H);
+        g.addColorStop(0, '#140b18');
+        g.addColorStop(1, '#2f122b');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.fillRect(34, 28, W - 68, 46);
+        ctx.fillStyle = '#ffd6e6';
+        ctx.font = '700 15px "Inter Tight", sans-serif';
+        ctx.fillText('INTELLIGENT PUBLIC TRANSPORT PLANNING PLATFORM  ·  ROUTE AI', 54, 56);
+        ctx.fillStyle = '#ff9ec4';
+        ctx.font = '700 13px "Inter Tight", sans-serif';
+        ctx.fillText('HACKATHON · 2026', W - 165, 56);
+
+        // Map Network Box
+        const mx = 46, my = 100, mw = 540, mh = 456;
+        ctx.fillStyle = 'rgba(12, 6, 16, 0.75)';
+        ctx.fillRect(mx, my, mw, mh);
+        ctx.strokeStyle = 'rgba(246, 184, 208, 0.24)';
+        ctx.strokeRect(mx, my, mw, mh);
+
+        const nodes = [
+          [120, 210, 'Hub A'], [230, 155, 'Station 2'], [370, 185, 'Central'],
+          [495, 160, 'Tech Park'], [155, 365, 'South Gate'], [315, 325, 'Junction'],
+          [465, 395, 'Terminal'], [290, 465, 'Campus']
+        ];
+        const edges = [[0,1],[1,2],[2,3],[0,4],[4,5],[5,2],[5,6],[4,7],[7,6],[2,6]];
+
+        ctx.lineWidth = 2.5;
+        edges.forEach(([a, b], idx) => {
+          const [x1, y1] = nodes[a], [x2, y2] = nodes[b];
+          ctx.strokeStyle = idx % 3 === 0 ? 'rgba(123, 240, 184, 0.55)' : 'rgba(255, 158, 196, 0.42)';
+          ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+
+          // Moving transit dot
+          const p = (t * 0.35 + idx * 0.17) % 1;
+          const px = x1 + (x2 - x1) * p;
+          const py = y1 + (y2 - y1) * p;
+          ctx.fillStyle = '#fff';
+          ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+        });
+
+        nodes.forEach(([nx, ny, lbl], i) => {
+          const pulse = 8 + Math.sin(t * 2.5 + i) * 3;
+          ctx.fillStyle = 'rgba(255, 158, 196, 0.22)';
+          ctx.beginPath(); ctx.arc(nx, ny, pulse + 6, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#ffd6e6';
+          ctx.beginPath(); ctx.arc(nx, ny, 6, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.font = '600 11px "Inter Tight", sans-serif';
+          ctx.fillText(lbl, nx - 18, ny - 14);
+        });
+
+        // Right Analytics Cards
+        const rx = 608, rw = 240;
+        const stats = [
+          ['ROUTE EFFICIENCY', '+28.4%', 'ML Demand Clustering'],
+          ['AVG WAIT TIME', '-19 min', 'Peak Load Balancing'],
+          ['ACTIVE CORRIDORS', '14 LINES', 'pandas · NumPy · FastAPI']
+        ];
+        stats.forEach(([k, v, sub], i) => {
+          const y = my + i * 116;
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+          ctx.fillRect(rx, y, rw, 98);
+          ctx.fillStyle = 'rgba(255, 214, 230, 0.72)';
+          ctx.font = '700 11px "Inter Tight", sans-serif';
+          ctx.fillText(k, rx + 18, y + 26);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '800 30px "Inter Tight", sans-serif';
+          ctx.fillText(v, rx + 18, y + 62);
+          ctx.fillStyle = '#7bf0b8';
+          ctx.font = '600 11px "Inter Tight", sans-serif';
+          ctx.fillText(sub, rx + 18, y + 83);
+        });
+
+        // Mini bar chart
+        const cy = my + 356;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.fillRect(rx, cy, rw, 100);
+        for (let b = 0; b < 10; b++) {
+          const bh = 24 + Math.abs(Math.sin(t * 1.8 + b * 0.6)) * 48;
+          ctx.fillStyle = b % 2 === 0 ? '#ff9ec4' : '#7bf0b8';
+          ctx.fillRect(rx + 18 + b * 20, cy + 84 - bh, 12, bh);
+        }
+      }
+
+      function drawDungeonCase(ctx, t) {
+        const W = 894, H = 605;
+        const g = ctx.createLinearGradient(0, 0, W, H);
+        g.addColorStop(0, '#160a14');
+        g.addColorStop(1, '#2b1025');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.fillRect(34, 28, W - 68, 46);
+        ctx.fillStyle = '#ffd6e6';
+        ctx.font = '700 15px "Inter Tight", sans-serif';
+        ctx.fillText('AI RESEARCH & JAVA DUNGEON TESTER  ·  50K+ LOC CONTRIBUTED', 54, 56);
+        ctx.fillStyle = '#7bf0b8';
+        ctx.font = '700 13px "Inter Tight", sans-serif';
+        ctx.fillText('JAVA · PYTHON · GIT', W - 175, 56);
+
+        // Left Procedural Dungeon Grid
+        const gx = 52, gy = 104, cell = 38, cols = 12, rows = 11;
+        ctx.fillStyle = 'rgba(10, 5, 10, 0.78)';
+        ctx.fillRect(gx - 8, gy - 8, cols * cell + 16, rows * cell + 16);
+
+        const map = [
+          '111111111111',
+          '100010000001',
+          '100010111101',
+          '100000100001',
+          '111011101101',
+          '100000001001',
+          '101110111001',
+          '101000000001',
+          '101011110111',
+          '100000000001',
+          '111111111111'
+        ];
+        const path = [[1,1],[2,1],[3,1],[3,3],[4,3],[5,3],[5,5],[6,5],[7,5],[7,7],[8,7],[9,7],[9,9],[10,9]];
+        const step = Math.floor((t * 3.2) % path.length);
+
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const wall = map[r][c] === '1';
+            ctx.fillStyle = wall ? 'rgba(246, 184, 208, 0.22)' : 'rgba(255, 255, 255, 0.04)';
+            ctx.fillRect(gx + c * cell + 2, gy + r * cell + 2, cell - 4, cell - 4);
+          }
+        }
+
+        // Draw path trail & player agent
+        for (let i = 0; i <= step; i++) {
+          const [c, r] = path[i];
+          ctx.fillStyle = i === step ? '#7bf0b8' : 'rgba(255, 158, 196, 0.45)';
+          ctx.fillRect(gx + c * cell + 8, gy + r * cell + 8, cell - 16, cell - 16);
+        }
+
+        // Right Code & Stack Overview
+        const rx = 540, rw = 304;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.fillRect(rx, 96, rw, 434);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 15px "Inter Tight", sans-serif';
+        ctx.fillText('ENGINEERING HIGHLIGHTS', rx + 20, 134);
+
+        const items = [
+          ['50K+ Lines of Code', 'Contributed via Git to codebase'],
+          ['Java Dungeon Tester', 'Procedural validation & JUnit'],
+          ['IT Support Specialist', 'Python, Java & Web debugging'],
+          ['Full-Stack & Cloud', 'React · Node.js · Flask · Docker']
+        ];
+        items.forEach(([h, s], i) => {
+          const y = 160 + i * 78;
+          ctx.fillStyle = 'rgba(255, 214, 230, 0.08)';
+          ctx.fillRect(rx + 18, y, rw - 36, 62);
+          ctx.fillStyle = '#ff9ec4';
+          ctx.font = '700 14px "Inter Tight", sans-serif';
+          ctx.fillText(h, rx + 30, y + 26);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.font = '500 12px "Inter Tight", sans-serif';
+          ctx.fillText(s, rx + 30, y + 46);
+        });
+
+        ctx.fillStyle = '#7bf0b8';
+        ctx.font = '700 12px "Inter Tight", sans-serif';
+        ctx.fillText('AUDI SANKARA COLLEGE · 2023 – 2027', rx + 20, 502);
+      }
+
+      const DRAWERS = [drawFaceCase, drawTransitCase, drawDungeonCase];
+
+      function startCanvasLoop(idx) {
+        activeCanvasIdx = idx;
+        if (canvasRaf) cancelAnimationFrame(canvasRaf);
+        const start = performance.now();
+        function loop(now) {
+          if (mode !== 'case' || activeCanvasIdx !== idx) return;
+          const t = (now - start) / 1000;
+          const ctx = caseCanvases[idx].getContext('2d');
+          DRAWERS[idx](ctx, t);
+          if (!RM) canvasRaf = requestAnimationFrame(loop);
+        }
+        canvasRaf = requestAnimationFrame(loop);
+      }
+
+      function stopCanvasLoop() {
+        activeCanvasIdx = -1;
+        if (canvasRaf) {
+          cancelAnimationFrame(canvasRaf);
+          canvasRaf = null;
+        }
+      }
+
+      // Frame fitting
+      function pose(m) {
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        if (!isMobile()) {
+          const cover = Math.max(W / 1440, H / 810);
+          const u = Math.min(W / 1440, H / 900);
+          if (m === 'hero') {
+            const s = cover;
+            return { s, x: (W - 1440 * s) / 2, y: 0 };
+          }
+          const top = 66 * u;
+          const fit = (H - top - 28 * u) / (762 - 79);
+          let s, y;
+          if (fit >= cover) {
+            s = cover;
+            y = Math.min(0, Math.max(H - 810 * s, top - 79 * s));
+          } else {
+            s = fit;
+            y = top - 79 * fit;
+          }
+          return { s, x: (W - 1440 * s) / 2, y };
+        }
+
+        if (m === 'hero') {
+          const s = Math.min(W / 680, (0.68 * H) / 810);
+          return { s, x: W / 2 - 720 * s, y: H - 800 * s };
+        }
+
+        const navH = 0.022 * H + 42 + 22;
+        const th = ticketEl.offsetHeight || 140;
+        const dh = descEl.offsetHeight || 60;
+        const uiBottom = 62 + th + 18 + Math.max(60, dh) + 14;
+        const s = Math.min((W - 28) / 950, Math.max(0.2, (H - navH - uiBottom) / (762 - 80)));
+        return { s, x: W / 2 - 720 * s, y: H - navH - 762 * s };
+      }
+
+      function fitHero(p) {
+        if (isMobile()) return;
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        const { s, x, y } = p;
+        const vl = Math.max(0, -x / s);
+        const vr = Math.min(1440, (W - x) / s);
+        const pad = 18 / s;
+
+        wmEl.style.left = (vl + 0.6 * pad) + 'px';
+        wmEl.style.width = (vr - vl - 1.2 * pad) + 'px';
+
+        badgeEl.style.left = Math.min(986, vr - pad - 417) + 'px';
+        const vb = Math.min(810, (H - y) / s);
+        badgeEl.style.top = Math.min(-165, vb - 56 / s - 935) + 'px';
+
+        scriptEl.style.left = (vl + pad + 70) + 'px';
+      }
+
+      function place(m) {
+        const mobile = isMobile();
+        const isCase = m === 'case';
+        frameEl.classList.toggle('m-case', isCase);
+        stageEl.classList.toggle('m-case', isCase);
+
+        if (mobile) {
+          const mbw = mBadgeWrap.offsetWidth || window.innerWidth * 0.27;
+          document.documentElement.style.setProperty('--mbs', mbw / 582);
+          document.documentElement.style.setProperty('--th', (ticketEl.offsetHeight || 140) + 'px');
+        }
+
+        const p = pose(m);
+        frameEl.style.transform = `translate(${p.x}px, ${p.y}px) scale(${p.s})`;
+        if (m === 'hero') fitHero(p);
+      }
+
+      place('hero');
+
+      window.addEventListener('resize', () => {
+        frameEl.classList.remove('glide');
+        place(mode);
+      });
+
+      // Badge sway & hover swing
+      function stopSway() {
+        swayAnims.forEach(a => a.cancel());
+        swayAnims = [];
+        if (swingAnim) {
+          swingAnim.cancel();
+          swingAnim = null;
+        }
+      }
+
+      function startSway() {
+        stopSway();
+        if (RM || mode !== 'hero' || busy) return;
+        swayAnims = badges.map(b =>
+          b.animate(
+            [{ transform: 'rotate(-1.1deg)' }, { transform: 'rotate(1.1deg)' }],
+            {
+              duration: 3200,
+              iterations: Infinity,
+              direction: 'alternate',
+              easing: 'ease-in-out',
+              iterationStart: 0.5
+            }
+          )
+        );
+      }
+
+      hitEl.addEventListener('pointerenter', () => {
+        if (RM || mode !== 'hero' || busy) return;
+        if (swingAnim) swingAnim.cancel();
+        swingAnim = badgeEl.animate(
+          [
+            { transform: 'rotate(0deg)' },
+            { transform: 'rotate(-6deg)' },
+            { transform: 'rotate(4deg)' },
+            { transform: 'rotate(-2deg)' },
+            { transform: 'rotate(0deg)' }
+          ],
+          { duration: 1400, easing: 'ease-out', composite: 'add' }
+        );
+      });
+
+      // Entrance
+      function enter() {
+        if (document.documentElement.dataset.in) return;
+        document.documentElement.dataset.in = '1';
+
+        if (RM) {
+          document.querySelectorAll('.pre').forEach(el => el.classList.remove('pre'));
+          return;
+        }
+
+        navTags.forEach((el, i) => {
+          el.animate(
+            [{ opacity: 0, transform: 'translateY(-40px) rotate(-4deg)' }, { opacity: 1, transform: 'none' }],
+            { duration: 700, delay: 120 + i * 80, easing: 'cubic-bezier(.3,1.5,.5,1)', fill: 'both' }
+          );
+        });
+
+        wms.forEach(el => {
+          el.animate(
+            [
+              { opacity: 0, transform: 'translateY(60px)', clipPath: 'inset(100% 0 0 0)' },
+              { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0)' }
+            ],
+            { duration: 1100, delay: 260, easing: easeDefault, fill: 'both' }
+          );
+        });
+
+        heroSubjectEl.animate(
+          [
+            { opacity: 0, transform: 'translateX(-50%) translateY(36px) scale(.92)' },
+            { opacity: 1, transform: 'translateX(-50%) translateY(0) scale(1)' }
+          ],
+          { duration: 950, delay: 420, easing: easeDefault, fill: 'both' }
+        );
+
+        laptopEl.animate(
+          [
+            { opacity: 0, transform: 'translate3d(0px, 280px, 0px) scale(0.35) rotateX(24deg) rotateY(-18deg) rotateZ(-6deg)' },
+            { opacity: 1, transform: HERO_LAPTOP_TF }
+          ],
+          { duration: 1000, delay: 560, easing: easeDefault, fill: 'both' }
+        );
+
+        scripts.forEach(el => {
+          el.animate(
+            [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0)' }],
+            { duration: 900, delay: 1050, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'both' }
+          );
+        });
+
+        let dropAnim = null;
+        badges.forEach((el, idx) => {
+          const a = el.animate(
+            [
+              { opacity: 0, transform: 'translateY(-120%) rotate(8deg)', offset: 0 },
+              { opacity: 1, transform: 'translateY(0) rotate(-3deg)', offset: 0.6 },
+              { opacity: 1, transform: 'translateY(0) rotate(1.6deg)', offset: 0.8 },
+              { opacity: 1, transform: 'translateY(0) rotate(0deg)', offset: 1 }
+            ],
+            { duration: 1500, delay: 700, easing: easeDefault, fill: 'both' }
+          );
+          if (idx === 0) dropAnim = a;
+        });
+
+        hintEl.animate(
+          [{ opacity: 0 }, { opacity: 0.85 }],
+          { duration: 600, delay: 1800, easing: easeDefault, fill: 'both' }
+        );
+
+        document.querySelectorAll('.pre').forEach(el => el.classList.remove('pre'));
+
+        if (dropAnim) {
+          dropAnim.finished.then(() => {
+            if (mode === 'hero' && !busy) startSway();
+          }).catch(() => {});
+        }
+      }
+
+      Promise.race([
+        document.fonts.ready,
+        new Promise(res => setTimeout(res, 2000))
+      ]).then(() => requestAnimationFrame(enter));
+      setTimeout(enter, 3500);
+
+      // Case helpers
+      function fillCase(i) {
+        const c = CASES[i];
+        ticketH2.textContent = c.title;
+        ticketRows.forEach((r, idx) => { r.textContent = c.rows[idx]; });
+        descKey.textContent = c.key;
+        descP.textContent = c.text;
+        descNum.textContent = String(i + 1).padStart(2, '0') + ' / 03';
+        prevBtn.classList.toggle('dim', i === 0);
+        if (isMobile()) {
+          document.documentElement.style.setProperty('--th', (ticketEl.offsetHeight || 140) + 'px');
+        }
+      }
+
+      function caseIn(i, first) {
+        fillCase(i);
+        anim(
+          ticketEl,
+          [
+            { opacity: 0, transform: 'translateY(-60px) rotate(-6deg)', offset: 0 },
+            { opacity: 1, transform: 'translateY(6px) rotate(1.2deg)', offset: 0.7 },
+            { opacity: 1, transform: 'none', offset: 1 }
+          ],
+          {
+            duration: dur(800),
+            delay: first ? dur(150) : 0,
+            easing: easeDefault,
+            fill: 'forwards'
+          }
+        );
+
+        const baseDelay = first ? 250 : 80;
+        descKids.forEach((el, k) => {
+          anim(
+            el,
+            [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }],
+            {
+              duration: dur(600),
+              delay: dur(baseDelay + k * 70),
+              easing: easeDefault,
+              fill: 'forwards'
+            }
+          );
+        });
+      }
+
+      function caseOut() {
+        anim(
+          ticketEl,
+          [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-40px) rotate(4deg)' }],
+          { duration: dur(380), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }
+        );
+        descKids.forEach((el, k) => {
+          anim(
+            el,
+            [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px)' }],
+            { duration: dur(300), delay: dur(k * 40), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }
+          );
+        });
+      }
+
+      function heroOut() {
+        stopSway();
+        const opts = { duration: dur(380), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' };
+        wms.forEach(el => anim(el, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-40px)' }], opts));
+        scripts.forEach(el => anim(el, [{ opacity: 1 }, { opacity: 0 }], opts));
+        badges.forEach(el => anim(el, [{ opacity: 1, transform: 'translateY(0) rotate(0deg)' }, { opacity: 0, transform: 'translateY(-110%) rotate(-6deg)' }], opts));
+        anim(
+          heroSubjectEl,
+          [
+            { opacity: 1, transform: 'translateX(-50%) translateY(0) scale(1)' },
+            { opacity: 0, transform: 'translateX(-50%) translateY(-40px) scale(0.86)' }
+          ],
+          opts
+        );
+      }
+
+      function heroIn() {
+        wms.forEach(el => {
+          anim(
+            el,
+            [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'translateY(0)' }],
+            { duration: dur(700), easing: easeDefault, fill: 'forwards' }
+          );
+        });
+        anim(
+          heroSubjectEl,
+          [
+            { opacity: 0, transform: 'translateX(-50%) translateY(30px) scale(0.9)' },
+            { opacity: 1, transform: 'translateX(-50%) translateY(0) scale(1)' }
+          ],
+          { duration: dur(750), delay: dur(80), easing: easeDefault, fill: 'forwards' }
+        );
+        scripts.forEach(el => {
+          anim(
+            el,
+            [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0)' }],
+            { duration: dur(700), delay: dur(250), easing: 'cubic-bezier(.5,0,.3,1)', fill: 'forwards' }
+          );
+        });
+
+        let dropAnim = null;
+        badges.forEach((el, idx) => {
+          const a = anim(
+            el,
+            [
+              { opacity: 0, transform: 'translateY(-110%) rotate(6deg)', offset: 0 },
+              { opacity: 1, transform: 'translateY(0) rotate(-2deg)', offset: 0.7 },
+              { opacity: 1, transform: 'translateY(0) rotate(0deg)', offset: 1 }
+            ],
+            { duration: dur(1100), easing: easeDefault, fill: 'forwards' }
+          );
+          if (idx === 0) dropAnim = a;
+        });
+
+        if (dropAnim && !RM) {
+          dropAnim.finished.then(() => {
+            if (mode === 'hero' && !busy) startSway();
+          }).catch(() => {});
+        }
+      }
+
+      // Transitions
+      async function arriveCase() {
+        mode = 'case';
+        document.body.classList.add('is-case');
+
+        anim(
+          flashEl,
+          [{ opacity: 0 }, { opacity: 0.55 }, { opacity: 0 }],
+          { duration: dur(600), easing: 'ease-out', fill: 'forwards' }
+        );
+
+        anim(
+          caseWraps[0],
+          [{ opacity: 0, transform: 'scale(1.06)' }, { opacity: 1, transform: 'scale(1)' }],
+          { duration: dur(700), easing: easeDefault, fill: 'forwards' }
+        );
+
+        startCanvasLoop(0);
+        caseIn(0, true);
+
+        await wait(dur(700));
+        busy = false;
+        document.body.classList.remove('busy');
+        frameEl.classList.remove('glide');
+      }
+
+      async function toCase() {
+        if (busy || mode !== 'hero') return;
+        busy = true;
+        document.body.classList.add('busy');
+
+        cur = 0;
+        fillCase(0);
+        heroOut();
+        await wait(dur(240));
+
+        frameEl.style.setProperty('--glide', RM ? '0s' : '1.2s');
+        frameEl.classList.add('glide');
+        place('case');
+
+        const dive = anim(
+          laptopEl,
+          [
+            { transform: HERO_LAPTOP_TF, offset: 0 },
+            { transform: 'translate3d(0px, 32px, 60px) scale(0.84) rotateX(6deg) rotateY(-4deg) rotateZ(-1deg)', offset: 0.55 },
+            { transform: CASE_LAPTOP_TF, offset: 1 }
+          ],
+          {
+            duration: dur(1250),
+            easing: 'cubic-bezier(.65, 0, .35, 1)',
+            fill: 'forwards'
+          }
+        );
+
+        await dive.finished;
+        await arriveCase();
+      }
+
+      async function swapTo(n) {
+        if (busy || mode !== 'case') return;
+        busy = true;
+        document.body.classList.add('busy');
+
+        const prev = cur;
+        cur = n;
+
+        caseOut();
+        anim(caseWraps[prev], [{ opacity: 1 }, { opacity: 0 }], { duration: dur(350), easing: 'ease-out', fill: 'forwards' });
+        await wait(dur(380));
+
+        anim(
+          flashEl,
+          [{ opacity: 0 }, { opacity: 0.35 }, { opacity: 0 }],
+          { duration: dur(420), easing: 'ease-out', fill: 'forwards' }
+        );
+
+        anim(
+          caseWraps[n],
+          [{ opacity: 0, transform: 'scale(1.04)' }, { opacity: 1, transform: 'scale(1)' }],
+          { duration: dur(500), easing: easeDefault, fill: 'forwards' }
+        );
+
+        startCanvasLoop(n);
+        caseIn(n, false);
+
+        await wait(dur(520));
+        busy = false;
+        document.body.classList.remove('busy');
+      }
+
+      async function toHero() {
+        if (busy || mode !== 'case') return;
+        busy = true;
+        document.body.classList.add('busy');
+
+        caseOut();
+        stopCanvasLoop();
+        caseWraps.forEach(w => {
+          anim(w, [{ opacity: parseFloat(getComputedStyle(w).opacity) || 0 }, { opacity: 0 }], { duration: dur(280), fill: 'forwards' });
+        });
+
+        mode = 'hero';
+        document.body.classList.remove('is-case');
+        frameEl.style.setProperty('--glide', RM ? '0s' : '.95s');
+        frameEl.classList.add('glide');
+        place('hero');
+
+        anim(
+          laptopEl,
+          [{ transform: CASE_LAPTOP_TF }, { transform: HERO_LAPTOP_TF }],
+          { duration: dur(950), easing: 'cubic-bezier(.65, 0, .35, 1)', fill: 'forwards' }
+        );
+
+        await wait(dur(220));
+        heroIn();
+
+        await wait(dur(800));
+        frameEl.classList.remove('glide');
+        busy = false;
+        document.body.classList.remove('busy');
+      }
+
+      function nextCase() {
+        swapTo((cur + 1) % CASES.length);
+      }
+
+      function prevCase() {
+        if (cur === 0) toHero();
+        else swapTo(cur - 1);
+      }
+
+      // Modals
+      const anyModalOpen = () => contactPop.classList.contains('open') || resumePop.classList.contains('open');
+
+      function openModal(el) {
+        el.classList.add('open');
+        el.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeModal(el) {
+        el.classList.remove('open');
+        el.setAttribute('aria-hidden', 'true');
+      }
+
+      copyEmailBtn.addEventListener('click', () => {
+        navigator.clipboard?.writeText('nandunandhu413@gmail.com').catch(() => {});
+        copyEmailBtn.textContent = 'Copied!';
+      });
+      closeContactBtn.addEventListener('click', () => closeModal(contactPop));
+      closeResumeBtn.addEventListener('click', () => closeModal(resumePop));
+      contactPop.addEventListener('click', e => { if (e.target === contactPop) closeModal(contactPop); });
+      resumePop.addEventListener('click', e => { if (e.target === resumePop) closeModal(resumePop); });
+
+      // Click triggers
+      t2El.addEventListener('click', () => { if (mode === 'hero') toCase(); });
+      t1El.addEventListener('click', () => { if (mode === 'case') toHero(); });
+      logoEl.addEventListener('click', () => { if (mode === 'case') toHero(); });
+      t3El.addEventListener('click', e => { e.preventDefault(); openModal(resumePop); });
+      t4El.addEventListener('click', e => {
+        e.preventDefault();
+        copyEmailBtn.textContent = 'Copy Email';
+        openModal(contactPop);
+      });
+      screenHitEl.addEventListener('click', () => { if (mode === 'case') nextCase(); });
+      prevBtn.addEventListener('click', () => { if (mode === 'case') prevCase(); });
+      nextBtn.addEventListener('click', () => { if (mode === 'case') nextCase(); });
+
+      // Wheel
+      let lastWheel = 0;
+      window.addEventListener('wheel', e => {
+        if (anyModalOpen()) return;
+        e.preventDefault();
+        if (busy) return;
+        const now = performance.now();
+        if (Math.abs(e.deltaY) < 18 || now - lastWheel < 900) return;
+        lastWheel = now;
+        if (e.deltaY > 0) {
+          if (mode === 'hero') toCase();
+          else nextCase();
+        } else if (mode === 'case') {
+          prevCase();
+        }
+      }, { passive: false });
+
+      // Touch
+      let tx = 0, ty = 0, touching = false;
+      window.addEventListener('touchstart', e => {
+        if (e.touches.length !== 1 || anyModalOpen()) return;
+        tx = e.touches[0].clientX;
+        ty = e.touches[0].clientY;
+        touching = true;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', e => {
+        if (anyModalOpen()) return;
+        e.preventDefault();
+      }, { passive: false });
+
+      window.addEventListener('touchend', e => {
+        if (!touching || busy || anyModalOpen() || !e.changedTouches.length) return;
+        touching = false;
+        const dx = e.changedTouches[0].clientX - tx;
+        const dy = e.changedTouches[0].clientY - ty;
+        if (Math.max(Math.abs(dx), Math.abs(dy)) < 40) return;
+
+        if (mode === 'hero') {
+          if (dy <= -40 && Math.abs(dy) >= Math.abs(dx)) toCase();
+        } else {
+          if (Math.abs(dy) >= Math.abs(dx)) {
+            if (dy <= -40) nextCase();
+            else if (dy >= 40) prevCase();
+          } else {
+            if (dx <= -40) nextCase();
+            else if (dx >= 40) prevCase();
+          }
+        }
+      }, { passive: true });
+
+      // Keyboard
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && anyModalOpen()) {
+          closeModal(contactPop);
+          closeModal(resumePop);
+          return;
+        }
+        if (anyModalOpen()) return;
+
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.code === 'Space' || e.key === ' ') {
+          e.preventDefault();
+          if (mode === 'hero') toCase();
+          else nextCase();
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          if (mode === 'case') nextCase();
+        } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          if (mode === 'case') prevCase();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
